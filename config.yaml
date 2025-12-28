@@ -1,0 +1,31 @@
+# Application Configuration
+
+# Chunking Settings
+chunking:
+  max_chunk_size: 4000  # Maximum characters per chunk
+  overlap: 200          # Overlapping characters between chunks
+
+# LLM Provider Settings
+providers:
+  openrouter:
+    default_model: "openai/gpt-oss-20b:free"
+    alternative_models:
+      - "meta-llama/llama-3.1-8b-instruct:free"
+      - "mistralai/mistral-7b-instruct:free"
+    temperature: 0.3
+    max_tokens: 2000
+  
+  ollama:
+    default_model: "qwen3:8b"
+    alternative_models:
+      - "qwen3:8b:8b"
+      - "llama3.2:3b"
+      - "phi-3.5:mini"
+    base_url: "http://localhost:11434"
+    temperature: 0.3
+
+# Output Settings
+output:
+  default_format: "markdown"
+  include_timestamps: true
+  include_metadata: true

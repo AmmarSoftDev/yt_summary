@@ -1,0 +1,14 @@
+# Required packages for YouTube Video Summarizer
+
+# Core dependencies
+youtube-transcript-api>=0.6.2
+requests>=2.31.0
+python-dotenv>=1.0.0
+pyyaml>=6.0.1
+
+# CLI interface
+rich>=13.7.0
+
+# HTTP handling
+urllib3>=2.1.0
+certifi>=2023.7.22
