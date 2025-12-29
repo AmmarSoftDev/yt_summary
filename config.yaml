@@ -23,6 +23,12 @@ providers:
       - "phi-3.5:mini"
     base_url: "http://localhost:11434"
     temperature: 0.3
+  
+  llamacpp:
+    default_model: "Qwen3-8B-Q4_K_M.gguf"
+    base_url: "http://localhost:8080"
+    temperature: 0.3
+    max_tokens: 2048
 
 # Output Settings
 output:

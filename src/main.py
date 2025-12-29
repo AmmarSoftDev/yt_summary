@@ -18,6 +18,7 @@ load_dotenv()
 
 from .providers.openrouter_provider import OpenRouterProvider
 from .providers.ollama_provider import OllamaProvider
+from .providers.llamacpp_provider import LlamaCppProvider
 from .agents.chunking_agent import ChunkingAgent
 from .agents.summarization_agent import SummarizationAgent
 from .agents.synthesis_agent import SynthesisAgent
@@ -35,7 +36,7 @@ class YouTubeSummarizer:
         """Initialize the summarizer.
         
         Args:
-            provider_type: Either "openrouter" or "ollama"
+            provider_type: Either "openrouter", "ollama", or "llamacpp"
             model_name: Optional model name override
         """
         self.provider_type = provider_type.lower()
@@ -68,8 +69,20 @@ class YouTubeSummarizer:
                     
                 console.print(f"[green]✓[/green] Using Ollama with model: [cyan]{model}[/cyan]")
                 
+            elif self.provider_type == "llamacpp":
+                model = self.model_name or "Qwen3-8B-Q4_K_M.gguf"
+                self.llm_provider = LlamaCppProvider(model_name=model)
+                
+                if not self.llm_provider.is_available():
+                    console.print(f"[red]❌ Llama.cpp server not running or model '{model}' not loaded![/red]")
+                    console.print(f"[yellow]Please ensure llama-server is running with the model loaded[/yellow]")
+                    sys.exit(1)
+                    
+                console.print(f"[green]✓[/green] Using Llama.cpp with model: [cyan]{model}[/cyan]")
+                
             else:
                 console.print(f"[red]❌ Unknown provider type: {self.provider_type}[/red]")
+                console.print(f"[yellow]Available providers: openrouter, ollama, llamacpp[/yellow]")
                 sys.exit(1)
                 
         except Exception as e:
@@ -191,6 +204,9 @@ Examples:
   # Using Ollama
   python -m src.main https://www.youtube.com/watch?v=VIDEO_ID --provider ollama
   
+  # Using Llama.cpp
+  python -m src.main https://www.youtube.com/watch?v=VIDEO_ID --provider llamacpp
+  
   # Save to file
   python -m src.main https://www.youtube.com/watch?v=VIDEO_ID -o summary.md
   
@@ -206,7 +222,7 @@ Examples:
     
     parser.add_argument(
         "-p", "--provider",
-        choices=["openrouter", "ollama"],
+        choices=["openrouter", "ollama", "llamacpp"],
         default="openrouter",
         help="LLM provider to use (default: openrouter)"
     )
